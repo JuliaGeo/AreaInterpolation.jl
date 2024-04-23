@@ -3,6 +3,12 @@ uuid = "d0f2625a-dce2-41fa-8f52-900cefdd6e0e"
 authors = ["Anshul Singhvi <anshulsinghvi@gmail.com> and contributors"]
 version = "0.0.1-DEV"
 
+[deps]
+GeoInterface = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
+GeometryOps = "3251bfac-6a57-4b6d-aa61-ac1fef2975ab"
+Rasters = "a3a2b9e3-a471-40c9-b274-f788e487c689"
+Stencils = "264155e8-78a8-466a-aa59-c9b28c34d21a"
+
 [compat]
 julia = "1.6.7"
 

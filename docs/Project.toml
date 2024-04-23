@@ -1,3 +1,12 @@
 [deps]
 ArealInterpolation = "d0f2625a-dce2-41fa-8f52-900cefdd6e0e"
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+GADM = "a8dd9ffe-31dc-4cf5-a379-ea69100a8233"
+GeoInterface = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
+GeometryOps = "3251bfac-6a57-4b6d-aa61-ac1fef2975ab"
+Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+RasterDataSources = "3cb90ccd-e1b6-4867-9617-4276c8b2ca36"
+Rasters = "a3a2b9e3-a471-40c9-b274-f788e487c689"
+Shapefile = "8e980c4a-a4fe-5da2-b3a7-4b4b0353a2f4"
+Stencils = "264155e8-78a8-466a-aa59-c9b28c34d21a"
