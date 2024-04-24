@@ -1,7 +1,10 @@
-#=
-# Tracts to voting precincts
 
-This tutorial is a Julia translation of https://pysal.org/tobler/notebooks/02_areal_interpolation_example.html.
+#=
+# Pycnophylactic interpolation
+
+This file is meant to be the framework for a Julia port of 
+https://github.com/pysal/tobler/blob/main/tobler/pycno/pycno.py,
+but using Rasters.jl -- and potentially a bit more efficient.
 =#
 
 ## Code to read shapefiles from zips
@@ -72,20 +75,58 @@ precincts_df.geometry = GI.getgeom.(precincts_df.geometry, 1) |> GO.tuples
 using SortTileRecursiveTree
 tracts_tree = STRtree(tracts.geometry)
 tracts_areas = GO.area.(tracts.geometry)
-# We use LibGEOS methods here because they are much faster than GeometryOps (by 10x)
-# on large polygons like these (large in number of vertices).  GeometryOps is optimized 
-# for 10-15 element polygons.
-@time youth_percentages = map(precincts_df.geometry) do polygon
-    likely_polygon_indices = query(tracts_tree, polygon)
-    coefficients = map(likely_polygon_indices) do i
-      LG.area(LG.intersection(tracts.geometry[i], polygon#=; target = GI.PolygonTrait()=#)) / tracts_areas[i]
-    end
-    s = sum(tracts.var"pct Youth"[likely_polygon_indices] .* coefficients ./ sum(coefficients)) 
-    if ismissing(s)
-      return NaN
-    else 
-      return s
-    end
-end
 
-poly(precincts_df.geometry; color = youth_percentages, strokecolor = :black)
+# Now, we use Rasters.jl to perform pycnophylactic interpolation.
+# NaNMath.jl provides NaN-ignoring reducer functions, which are useful here.
+using Rasters, NaNMath
+# First, we rasterize the tracts by ID.
+# Here, we assign the missing value to be the max ID plus 1, so that
+# we can keep the raster as an Int, and not worry about NaNs.  
+# This also allows us to avoid branching in the loop, which helps 
+# performance!
+@time polygon_index_raster = rasterize(
+    last,
+    tracts; 
+    size = (1000, 1000), 
+    fill = 1:length(tracts.geometry),
+    boundary = :touches, 
+    missingval = length(tracts.geometry)+1,
+)
+# Now, we can also process areas:
+area_vec = zeros(Int, length(tracts.geometry)+1)
+for cell in polygon_index_raster
+    area_vec[cell] += 1
+end
+pop!(area_vec) 
+plot(tracts.geometry; color = log10.(area_vec))
+# That looks right to me!
+
+# Now, we create the raster that we will operate on.  
+tracts.var"pct Youth" = replace(tracts.var"pct Youth", missing => 0.0)
+raster = rasterize(
+    maximum, 
+    tracts; 
+    size = (1000, 1000), 
+    fill = :var"pct Youth",
+    boundary = :touches, 
+    missingval = NaN,
+)
+# To implement zero-derivative BC, could you use NaNMath???  That sounds cool...
+
+# Zero boundary condition on borders.  To convert this to a zero 
+# derivative boundary condition, one would need to get the polygons
+# that lie along the convex hull, and buffer them outside that hull 
+# such that the boundary points have the same value as those polygon points.
+
+# Alternatively, one can find the nearest polygon to an exterior point using 
+# `distance` and an STRtree query, then fill it with that polygon's value.
+# That sounds somehow better than buffering -- or perhaps the rasterized version
+# of buffering.  One would need to figure out a way to get a border polygon for
+# the whole thing, though, which sounds somehow inefficient.  Unless you filled the whole
+# Raster up...
+
+
+
+
+function pycno_smooth!(raster, polygon_index_raster, stencil, reducer; maxiters, tol)
+end
