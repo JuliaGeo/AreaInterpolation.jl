@@ -4,6 +4,7 @@ authors = ["Anshul Singhvi <anshulsinghvi@gmail.com> and contributors"]
 version = "0.0.1-DEV"
 
 [deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 GeoInterface = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
 GeometryOps = "3251bfac-6a57-4b6d-aa61-ac1fef2975ab"
 Rasters = "a3a2b9e3-a471-40c9-b274-f788e487c689"
