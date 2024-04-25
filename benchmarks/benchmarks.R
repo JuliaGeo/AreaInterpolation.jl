@@ -19,12 +19,14 @@ data(ar_stl_asthma, package = "areal")
 data(ar_stl_race, package = "areal")
 data(ar_stl_wards, package = "areal")
 data(ar_stl_wardsClipped, package = "areal")
-
-microbenchmark(
+# Take the benchmark for the St. Louis polygons
+res <- microbenchmark(
   aw_interpolate(ar_stl_wards, tid = WARD, source = ar_stl_race, sid = GEOID,
                  weight = "sum", output = "tibble", extensive = "TOTAL_E"),
   suppressWarnings(st_interpolate_aw(ar_stl_race["TOTAL_E"], ar_stl_wards, extensive = TRUE))
 )
+# Save the results of the benchmarking run
+save(res, file = "benchmarks.RData")
 
 # Unit: milliseconds
 #                                                                                                                                          expr

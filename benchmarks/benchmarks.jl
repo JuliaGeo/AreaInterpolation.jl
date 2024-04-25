@@ -22,6 +22,26 @@ _reprocess_r_polygons!(wardsClipped)
 # Run benchmark
 using Chairmarks
 using ArealInterpolation
-@be interpolate(Direct(), wards, race)
+@be interpolate(Direct(), $wards, $race; features = $((:TOTAL_E,))) seconds=3
+@be interpolate(Direct(), $wards, $race; features = $((:TOTAL_E,)), threaded = false) seconds=3
+# Multithreaded 9ms, single-threaded 43ms, R 65ms median timings!!
 
 racy_wards = interpolate(Direct(), wards, race; features = (:TOTAL_E,))
+
+
+using CairoMakie, MakieThemes
+with_theme(MakieThemes.bbc()) do 
+    scatter(
+        [1, 2, 3],
+        [9, 43, 65];
+        axis = (;
+            title = "Benchmarking regular interpolation",
+            subtitle = "On the St. Louis wards dataset",
+            ylabel = "Median time to execute (ms)",
+            xticks = (1:3, ["Multithreaded", "Single-threaded", "R (areal)"]),
+            xticksvisible = true,
+            xticklabelsvisible = true,
+            ytickformat = values -> string.(round.((Int,), values)) .* " ms",
+        )
+    )
+end
