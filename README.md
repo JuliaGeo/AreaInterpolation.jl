@@ -4,6 +4,10 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaGeo.github.io/ArealInterpolation.jl/dev/)
 [![Build Status](https://github.com/JuliaGeo/ArealInterpolation.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/JuliaGeo/ArealInterpolation.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
+## Performance
+ArealInterpolation.jl offers seamless multithreading support, and integrates with the rest of the Julia ecosystem as well!
+![download-13](https://github.com/JuliaGeo/ArealInterpolation.jl/assets/32143268/bbc8b36e-f7a3-491d-afd2-045101d334d3)
+
 
 References:
 
