@@ -20,15 +20,16 @@ abstract type AbstractArealInterpolator end
 function interpolate(interpolator::AbstractArealInterpolator, target, sources; kwargs...)
     return interpolate(interpolator, GI.trait(target), GI.trait(sources), target, sources; kwargs...)
 end
-
+# Address the possibility that the target is a single geometry.  In this case, we return weights.  Should we return a Feature, though?
 function interpolate(interpolator::AbstractArealInterpolator, ::Union{GI.PolygonTrait, GI.MultiPolygonTrait}, ft::Union{GI.FeatureCollectionTrait, Nothing}, target, sources; features = nothing, kwargs...)
     source_geometries, source_values = decompose_to_geoms_and_values(sources; features)
     source_rtree = SortTileRecursiveTree.STRtree(source_geometries)
     # It's the FC -> FC level that has to deal with reconstructing features, so we don't do that here.
-    return interpolate(interpolator, target, source_geometries, source_values, GO.area.(source_geometries), source_rtree)
+    return interpolate(interpolator, target, source_geometries, source_values, GO.area.(source_geometries), source_rtree; kwargs...)
 end
-
-function interpolate(interpolator::AbstractArealInterpolator, TargetTrait::Union{GI.FeatureCollectionTrait, Nothing}, SourceTrait::Union{GI.FeatureCollectionTrait, Nothing}, target, sources; features = nothing, kwargs...)
+# An algorithm which benefits from batching, or has a single processing step for the whole `source` collection,
+# should override the version of `interpolate` that this calls.  
+function interpolate(interpolator::AbstractArealInterpolator, TargetTrait::Union{GI.FeatureCollectionTrait, Nothing}, SourceTrait::Union{GI.FeatureCollectionTrait, Nothing}, target, sources; features = nothing, threaded = true, kwargs...)
     # First, we extract the geometry and values from the source FeatureCollection
     source_geometries, source_values = decompose_to_geoms_and_values(sources; features)
     # Then, we also extract the geometries from the target FeatureCollection.  In this case,
@@ -40,9 +41,13 @@ function interpolate(interpolator::AbstractArealInterpolator, TargetTrait::Union
     # which is defined per interpolator.
     source_areas = GO.area.(source_geometries)
     function _interp_poly(polygon)
-        interpolate(interpolator, polygon, source_geometries, source_values, source_areas, source_rtree)
+        interpolate(interpolator, polygon, source_geometries, source_values, source_areas, source_rtree; kwargs...)
     end
-    interpolated_feature_values = map(_interp_poly, target_geometries) 
+    interpolated_feature_values = if threaded
+        OhMyThreads.tmap(_interp_poly, target_geometries)
+    else
+        map(_interp_poly, target_geometries) 
+    end
     # The result of `map` above is a canonical row table form, being a Vector of NamedTuples.
     # We can convert it directly into a column table, i.e., a NamedTuple of Vectors, using Tables.
     new_feature_columns = Tables.columntable(interpolated_feature_values)
@@ -71,7 +76,7 @@ weighted by their areas of intersection with the target polygon.
 This method does not allocate a Raster, but it does perform polygon intersection tests.
 """
 struct Direct <: AbstractArealInterpolator end
-
+# Direct is pretty straightforward - but it could be renamed.
 """
     Pycnophylactic()
 
@@ -90,6 +95,7 @@ This description was taken in part from [the GIS&T Body of Knowledge](https://gi
 """
 struct Pycnophylactic <: AbstractArealInterpolator end
 const Pycno = Pycnophylactic # who exactly is going to type this thing?
+# Pycno should abstract the "weighting" part of the algorithm to a function, so people can inspect the interpolated raster.
 
 """
     Dasymetric(mask::Raster)
@@ -102,4 +108,7 @@ more accurate interpolation than the direct or pycnophylactic methods.
 struct Dasymetric <: AbstractArealInterpolator 
     mask::Rasters.Raster
 end
+# Potential examples: using Facebook's population density data, or land-use data, or even nightlights.  That would actually be cool...
+
+# TODO: street-weighted interpolation (again kind of like dasymetric), but with e.g. OpenStreetMap integration.
 

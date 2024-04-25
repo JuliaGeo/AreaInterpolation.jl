@@ -11,10 +11,13 @@ import GeometryOps as GO, GeoInterface as GI, LibGEOS as LG
 import Rasters, Stencils # for pycnophylactic and dasymetric interpolation
 import Tables, DataFrames # for table manipulation and to process table input
 import SortTileRecursiveTree # for STRtrees to make geometry queries more efficient
+import OhMyThreads # for multithreaded computation on polygons -- make sure they're native Julia geometries!
 
 include("types.jl")
 include("utils.jl")
-include("regular.jl")
+include("direct.jl")
+include("pycnophylactic.jl")
+include("dasymetric.jl")
 
 export interpolate
 export Direct, Pycno, Pycnophylactic, Dasymetric
