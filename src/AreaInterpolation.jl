@@ -1,4 +1,4 @@
-module ArealInterpolation
+module AreaInterpolation
 
 # Multiple methods.  We start with the regular method, i.e., simple area interpolation without any redeeming features.
 # Then, we'll branch out into pycnophylactic interpolation, which is still free of external information.

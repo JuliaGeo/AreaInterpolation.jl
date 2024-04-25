@@ -1,6 +1,6 @@
-using ArealInterpolation
+using AreaInterpolation
 using Test
 
-@testset "ArealInterpolation.jl" begin
+@testset "AreaInterpolation.jl" begin
     # Write your tests here.
 end

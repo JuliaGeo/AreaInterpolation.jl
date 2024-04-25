@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = ArealInterpolation
+CurrentModule = AreaInterpolation
 ```
 
-# ArealInterpolation
+# AreaInterpolation
 
-Documentation for [ArealInterpolation](https://github.com/JuliaGeo/ArealInterpolation.jl).
+Documentation for [AreaInterpolation](https://github.com/JuliaGeo/AreaInterpolation.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [ArealInterpolation]
+Modules = [AreaInterpolation]
 ```

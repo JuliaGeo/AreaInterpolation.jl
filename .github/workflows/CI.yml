@@ -67,6 +67,6 @@ jobs:
         shell: julia --project=docs --color=yes {0}
         run: |
           using Documenter: DocMeta, doctest
-          using ArealInterpolation
-          DocMeta.setdocmeta!(ArealInterpolation, :DocTestSetup, :(using ArealInterpolation); recursive=true)
-          doctest(ArealInterpolation)
+          using AreaInterpolation
+          DocMeta.setdocmeta!(AreaInterpolation, :DocTestSetup, :(using AreaInterpolation); recursive=true)
+          doctest(AreaInterpolation)

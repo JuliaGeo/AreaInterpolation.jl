@@ -23,7 +23,7 @@ racy_wards = interpolate(Direct(), wards, race; features = (:TOTAL_E,))
 
 # Run benchmark in Julia
 using Chairmarks
-using ArealInterpolation
+using AreaInterpolation
 multi_threaded_benchmark = @be interpolate(Direct(), $wards, $race; features = $((:TOTAL_E,))) seconds=3
 single_threaded_benchmark = @be interpolate(Direct(), $wards, $race; features = $((:TOTAL_E,)), threaded = false) seconds=3
 # Multithreaded 9ms, single-threaded 43ms, R 65ms median timings!!

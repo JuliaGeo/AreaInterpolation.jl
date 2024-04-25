@@ -1,14 +1,14 @@
-using ArealInterpolation
+using AreaInterpolation
 using Documenter, DocumenterVitepress
 
-DocMeta.setdocmeta!(ArealInterpolation, :DocTestSetup, :(using ArealInterpolation); recursive=true)
+DocMeta.setdocmeta!(AreaInterpolation, :DocTestSetup, :(using AreaInterpolation); recursive=true)
 
 makedocs(;
-    modules=[ArealInterpolation],
+    modules=[AreaInterpolation],
     authors="Anshul Singhvi <anshulsinghvi@gmail.com> and contributors",
-    sitename="ArealInterpolation.jl",
+    sitename="AreaInterpolation.jl",
     format=DocumenterVitepress.MarkdownVitepress(;
-        repo = "https://github.com/JuliaGeo/ArealInterpolation.jl",
+        repo = "https://github.com/JuliaGeo/AreaInterpolation.jl",
     ),
     pages=[
         "Home" => "index.md",
@@ -16,6 +16,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/JuliaGeo/ArealInterpolation.jl",
+    repo="github.com/JuliaGeo/AreaInterpolation.jl",
     devbranch="main",
 )
