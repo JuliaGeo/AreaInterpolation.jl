@@ -7,10 +7,14 @@ version = "0.0.1-DEV"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 GeoInterface = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
 GeometryOps = "3251bfac-6a57-4b6d-aa61-ac1fef2975ab"
+LibGEOS = "a90b1aa1-3769-5649-ba7e-abc5a9d163eb"
 Rasters = "a3a2b9e3-a471-40c9-b274-f788e487c689"
+SortTileRecursiveTree = "746ee33f-1797-42c2-866d-db2fce69d14d"
 Stencils = "264155e8-78a8-466a-aa59-c9b28c34d21a"
+Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 
 [compat]
+DataFrames = "1"
 GeoInterface = "1"
 julia = "1.6.7"
 
