@@ -1,5 +1,5 @@
 using ArealInterpolation
-using Documenter
+using Documenter, DocumenterVitepress
 
 DocMeta.setdocmeta!(ArealInterpolation, :DocTestSetup, :(using ArealInterpolation); recursive=true)
 
@@ -7,10 +7,8 @@ makedocs(;
     modules=[ArealInterpolation],
     authors="Anshul Singhvi <anshulsinghvi@gmail.com> and contributors",
     sitename="ArealInterpolation.jl",
-    format=Documenter.HTML(;
-        canonical="https://JuliaGeo.github.io/ArealInterpolation.jl",
-        edit_link="main",
-        assets=String[],
+    format=DocumenterVitepress.MarkdownVitepress(;
+        repo = "https://github.com/JuliaGeo/ArealInterpolation.jl",
     ),
     pages=[
         "Home" => "index.md",
