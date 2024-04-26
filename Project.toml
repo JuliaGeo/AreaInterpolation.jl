@@ -19,6 +19,8 @@ DataFrames = "1"
 GeoInterface = "1"
 GeometryOps = "0.1"
 LibGEOS = "0.8, 0.9"
+OhMyThreads = "0.5"
+SortTileRecursiveTree = "0.1"
 julia = "1.9"
 
 [extras]
