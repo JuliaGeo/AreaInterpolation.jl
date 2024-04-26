@@ -78,7 +78,7 @@ This method does not allocate a Raster, but it does perform polygon intersection
 struct Direct <: AbstractInterpolationMethod end
 # Direct is pretty straightforward - but it could be renamed.
 """
-    Pycnophylactic()
+    Pycnophylactic(cellsize; relaxation, maxiters, tol)
 
 A pycnophylactic method for areal interpolation.
 
@@ -92,8 +92,22 @@ However, it generates intuitively elegant allocations for many urban case studie
 many applications (Kounadi, Ristea, Leitner, & Langford, 2018; Comber, Proctor, & Anthony, 2008).
 
 This description was taken in part from [the GIS&T Body of Knowledge](https://gistbok.ucgis.org/bok-topics/areal-interpolation).
+
+## Fields
+$(FIELDS)
+
 """
-struct Pycnophylactic <: AbstractInterpolationMethod end
+struct Pycnophylactic <: AbstractInterpolationMethod 
+    "The cellsize of the interpolated raster, in units of the CRS of the input polygons (can be degrees or meters).  **Required argument!**"
+    cellsize::Float64
+    "The relaxation factor.  Defaults to `0.2`."
+    relaxation::Float64
+    "The maximum number of iterations.  Defaults to `1000`."
+    maxiters::Int
+    "The tolerance.  Defaults to `10e-3`."
+    tol::Float64
+end
+Pycnophylactic(cellsize; relaxation = 0.2, maxiters = 1000, tol = 10e-3) = Pycnophylactic(cellsize, relaxation, maxiters, tol)
 const Pycno = Pycnophylactic # who exactly is going to type this thing?
 # Pycno should abstract the "weighting" part of the algorithm to a function, so people can inspect the interpolated raster.
 
