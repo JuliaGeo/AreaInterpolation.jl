@@ -1,27 +1,27 @@
 # # Types
 
 """
-    abstract type AbstractArealInterpolator
+    abstract type AbstractInterpolationMethod
 
 The abstract type for all areal interpolation methods.
 
 ## Interface
 All `AbstractArealInterpolator`s must implement the following interface:
-- `interpolate(interpolator::AbstractArealInterpolator, target::GI.AbstractPolygon, sources, values::Vector{Vector}, source_rtree)`
+- `interpolate(interpolator::AbstractInterpolationMethod, target::GI.AbstractPolygon, sources, values::Vector{Vector}, source_rtree)`
 This interface is not set in stone and can be changed!
 
 TODOS:
     - extensive vs intensive variables (currently we act as though variables are intensive)
     - weight methods (sum vs total) - just pass any arbitrary accumulator
 """
-abstract type AbstractArealInterpolator end
+abstract type AbstractInterpolationMethod end
 
 # Define the API as well as the toplevel conversion methods
-function interpolate(interpolator::AbstractArealInterpolator, target, sources; kwargs...)
+function interpolate(interpolator::AbstractInterpolationMethod, target, sources; kwargs...)
     return interpolate(interpolator, GI.trait(target), GI.trait(sources), target, sources; kwargs...)
 end
 # Address the possibility that the target is a single geometry.  In this case, we return weights.  Should we return a Feature, though?
-function interpolate(interpolator::AbstractArealInterpolator, ::Union{GI.PolygonTrait, GI.MultiPolygonTrait}, ft::Union{GI.FeatureCollectionTrait, Nothing}, target, sources; features = nothing, kwargs...)
+function interpolate(interpolator::AbstractInterpolationMethod, ::Union{GI.PolygonTrait, GI.MultiPolygonTrait}, ft::Union{GI.FeatureCollectionTrait, Nothing}, target, sources; features = nothing, kwargs...)
     source_geometries, source_values = decompose_to_geoms_and_values(sources; features)
     source_rtree = SortTileRecursiveTree.STRtree(source_geometries)
     # It's the FC -> FC level that has to deal with reconstructing features, so we don't do that here.
@@ -29,7 +29,7 @@ function interpolate(interpolator::AbstractArealInterpolator, ::Union{GI.Polygon
 end
 # An algorithm which benefits from batching, or has a single processing step for the whole `source` collection,
 # should override the version of `interpolate` that this calls.  
-function interpolate(interpolator::AbstractArealInterpolator, TargetTrait::Union{GI.FeatureCollectionTrait, Nothing}, SourceTrait::Union{GI.FeatureCollectionTrait, Nothing}, target, sources; features = nothing, threaded = true, kwargs...)
+function interpolate(interpolator::AbstractInterpolationMethod, TargetTrait::Union{GI.FeatureCollectionTrait, Nothing}, SourceTrait::Union{GI.FeatureCollectionTrait, Nothing}, target, sources; features = nothing, threaded = true, kwargs...)
     # First, we extract the geometry and values from the source FeatureCollection
     source_geometries, source_values = decompose_to_geoms_and_values(sources; features)
     # Then, we also extract the geometries from the target FeatureCollection.  In this case,
@@ -75,7 +75,7 @@ weighted by their areas of intersection with the target polygon.
 
 This method does not allocate a Raster, but it does perform polygon intersection tests.
 """
-struct Direct <: AbstractArealInterpolator end
+struct Direct <: AbstractInterpolationMethod end
 # Direct is pretty straightforward - but it could be renamed.
 """
     Pycnophylactic()
@@ -93,7 +93,7 @@ many applications (Kounadi, Ristea, Leitner, & Langford, 2018; Comber, Proctor, 
 
 This description was taken in part from [the GIS&T Body of Knowledge](https://gistbok.ucgis.org/bok-topics/areal-interpolation).
 """
-struct Pycnophylactic <: AbstractArealInterpolator end
+struct Pycnophylactic <: AbstractInterpolationMethod end
 const Pycno = Pycnophylactic # who exactly is going to type this thing?
 # Pycno should abstract the "weighting" part of the algorithm to a function, so people can inspect the interpolated raster.
 
@@ -105,7 +105,7 @@ Dasymetric interpolation uses a mask to weight the influence of each polygon.
 Depending on the choice of mask, like land-use data, this can prove to be a 
 more accurate interpolation than the direct or pycnophylactic methods.
 """
-struct Dasymetric <: AbstractArealInterpolator 
+struct Dasymetric <: AbstractInterpolationMethod 
     mask::Rasters.Raster
 end
 # Potential examples: using Facebook's population density data, or land-use data, or even nightlights.  That would actually be cool...
