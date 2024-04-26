@@ -1,4 +1,4 @@
-# This file is taken from 
+# This file is taken from areal.R
 # primary package
 library(areal)
 
