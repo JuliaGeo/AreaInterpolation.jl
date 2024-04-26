@@ -5,53 +5,19 @@ This tutorial is a Julia translation of https://pysal.org/tobler/notebooks/02_ar
 =#
 
 ## Code to read shapefiles from zips
-import ZipFile, Shapefile
-function read_shp_from_zipfile(zipfile)
-  r = ZipFile.Reader(zipfile)
-  # need to get dbx
-  shpdata, shxdata, dbfdata, prjdata = nothing, nothing, nothing, nothing
-  for f in r.files
-    fn = f.name
-    lfn = lowercase(fn)
-    if endswith(lfn, ".shp")
-      shpdata = IOBuffer(read(f))
-    elseif endswith(lfn, ".shx")
-      shxdata = read(f, Shapefile.IndexHandle)
-    elseif endswith(lfn, ".dbf")
-      dbfdata = Shapefile.DBFTables.Table(IOBuffer(read(f)))
-    elseif endswith(lfn, "prj")
-      prjdata = try
-        Shapefile.GeoFormatTypes.ESRIWellKnownText(Shapefile.GeoFormatTypes.CRS(), read(f, String))
-      catch
-        @warn "Projection file $zipfile/$lfn appears to be corrupted. `nothing` used for `crs`"
-        nothing 
-      end
-    end
-  end
-  close(r)
-  @assert shpdata !== nothing
-  shp = if shxdata !== nothing # we have shxdata/index 
-    read(shpdata, Shapefile.Handle, shxdata)
-  else
-    read(shpdata, Shapefile.Handle)
-  end 
-  if prjdata !== nothing
-    shp.crs = prjdata 
-  end 
-  return Shapefile.Table(shp, dbfdata)
-end 
-
-using Shapefile
+# This depends on https://github.com/JuliaGeo/Shapefile.jl/pull/113 for now, once that's merged and released it won't be needed.
+# For now, run `]add Shapefile#as/zipfile` to get that branch.
+using Shapefile, ZipFile
 using CairoMakie, GeoInterfaceMakie
 import GeometryOps as GO, GeoInterface as GI
 # First, we download the census tract data:
-tracts_zipfile = download("https://ndownloader.figshare.com/files/20460645")
-tracts = read_shp_from_zipfile(tracts_zipfile)
+tracts_zipfile = download("https://ndownloader.figshare.com/files/20460645", "tracts.zip")
+tracts = Shapefile.Table(tracts_zipfile)
 poly(tracts.geometry; color = :transparent, strokewidth = 1)
 
 # Then, we download the precinct data:
 precincts_zipfile = download("https://ndownloader.figshare.com/files/20460549")
-precincts = read_shp_from_zipfile(precincts_zipfile)
+precincts = Shapefile.Table(precincts_zipfile)
 poly(precincts.geometry; color = :transparent, strokewidth = 1)
 # Hold on -- something looks wrong here!  It turns out that the precincts are not in the same projection as the tracts.  We can fix this by transforming the precincts to the tracts' projection.
 # Reproject tracts to match the CRS of precincts

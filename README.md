@@ -4,6 +4,10 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaGeo.github.io/AreaInterpolation.jl/dev/)
 [![Build Status](https://github.com/JuliaGeo/AreaInterpolation.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/JuliaGeo/AreaInterpolation.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
+AreaInterpolation.jl is a package to perform "areal interpolation", that is, interpolating values associated with one set of polygons, to another set of polygons that overlap the first set [^GISTBOK].
+
+Similar implementations in other languages can be found in [^areal] (R), [^sf] (R), and [^tobler] (Python).
+
 ## Performance
 AreaInterpolation.jl offers seamless multithreading support, and integrates with the rest of the Julia ecosystem as well!
 ![download-13](https://github.com/JuliaGeo/AreaInterpolation.jl/assets/32143268/bbc8b36e-f7a3-491d-afd2-045101d334d3)
