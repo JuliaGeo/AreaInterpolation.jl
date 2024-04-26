@@ -96,10 +96,18 @@ This description was taken in part from [the GIS&T Body of Knowledge](https://gi
 ## Fields
 $(FIELDS)
 
+## Differences from other implementations
+
+`tobler` in Python uses the equivalent of `Stencils.Kernel(Stencils.Cross(1, 2), [0.5, 0.5, 0, 0.5, 0.5])`.  
+This implementation allows arbitrary kernels, so the user can choose the kind of smoothing and kernel window 
+based on their desires.
+
 """
 struct Pycnophylactic <: AbstractInterpolationMethod 
-    "The cellsize of the interpolated raster, in units of the CRS of the input polygons (can be degrees or meters).  **Required argument!**"
+    "The cell size of the raster to be interpolated, in units of the CRS of the input polygons (can be degrees or meters).  **Required argument!**"
     cellsize::Float64
+    "The kernel with which to smooth the raster.  Defaults to a 2-D Moore window of size 1, with value 0.5."
+    kernel::Stencils.Stencil = Stencils.Kernel(Stencils.Moore(1, 2), fill(0.5, length(Stencils.Moore(1, 2))))
     "The relaxation factor.  Defaults to `0.2`."
     relaxation::Float64
     "The maximum number of iterations.  Defaults to `1000`."
