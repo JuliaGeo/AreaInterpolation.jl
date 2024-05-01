@@ -152,12 +152,12 @@ function pycno_interpolate(raster::Rasters.Raster, source_polygons, source_vals,
     return per_polygon_values
 end
 
-function pycno_interpolate(pycno::Pycnophylactic, source_polygons, source_vals, target_polygons)
+function pycno_interpolate(pycno::Pycnophylactic, source_polygons, source_vals, area_corrected_vals, target_polygons)
     raster = Rasters.rasterize(
         last,
         source_polygons;
         res = pycno.cellsize,
-        fill = source_vals,
+        fill = area_corrected_vals,
         boundary = :touches,
         missingval = NaN
     )
