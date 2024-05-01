@@ -134,3 +134,21 @@ end
 
 # TODO: street-weighted interpolation (again kind of like dasymetric), but with e.g. OpenStreetMap integration.
 
+# ## Custom errors
+struct CRSMismatchError <: Exception
+    target_crs
+    source_crs
+end
+
+function Base.showerror(io::IO, err::CRSMismatchError)
+    print(
+        io, 
+        """
+        CRSMismatchError: The CRS of the target and source geometries do not match.
+        Target CRS: """
+    )
+    display(Base.TextDisplay(io), MIME"text/plain"(), err.target_crs)
+    print(io, "Source CRS: ")
+    display(Base.TextDisplay(io), MIME"text/plain"(), err.source_crs)
+end
+
