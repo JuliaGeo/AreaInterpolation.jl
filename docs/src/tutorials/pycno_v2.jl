@@ -22,6 +22,11 @@ _reprocess_r_polygons!(race)
 _reprocess_r_polygons!(wards)
 _reprocess_r_polygons!(wardsClipped)
 
+
+using AreaInterpolation
+itp = Pycnophylactic(20.0; kernel = five_point_kernel)
+interpolate(itp, wards, race; features = (:TOTAL_E,))
+
 # Now, we use Rasters.jl to perform pycnophylactic interpolation.
 # NaNMath.jl provides NaN-ignoring reducer functions, which are useful here.
 using Rasters, NaNMath, Stencils

@@ -66,8 +66,8 @@ end
 function pycno_iterate(raster, polygons, vals, relaxation, stencil, tolerance = 10^-3, maxiters = 1000)
     polygon_views = [
         begin
-            cropped = crop(raster; to=pol, touches = true)
-            masked = boolmask(pol; to = cropped, boundary = :touches) 
+            cropped = Rasters.crop(raster; to=pol, touches = true)
+            masked = Rasters.boolmask(pol; to = cropped, boundary = :touches) 
             view(cropped, masked)
         end for pol in polygons
     ]
@@ -84,7 +84,7 @@ function pycno_iterate(raster, polygons, vals, polygon_views, relaxation, stenci
     # new receives the convolved version of old, and we can start the next iteration.
     old = deepcopy(raster.data)
     # This `StencilArray` is used to convolve the stencil with the data.
-    sa = StencilArray(old, stencil #= kernel =#)
+    sa = Stencils.StencilArray(old, stencil #= kernel =#)
     i = 1
     for _ in 1:maxiters
         Δ_max = pycno_iteration!(old, new, sa, polygon_views, vals, relaxation)
@@ -95,14 +95,14 @@ function pycno_iterate(raster, polygons, vals, polygon_views, relaxation, stenci
         # TODO: This reallocates, since it has to pad the array.  
         # Find a way to avoid this.
         # One way may be to make `old` a view into a pre-padded array.
-        sa = StencilArray(old, stencil)
+        sa = Stencils.StencilArray(old, stencil)
         i += 1
     end
     if i ≥ maxiters
         @warn "Maximum number of iterations ($maxiters) reached during pycnophylactic iteration.  Consider increasing `tolerance` for faster convergence, or increase `maxiters`."
     end
     # Faithfully reconstruct the original Raster with the new data, and return it.
-    return Raster(new, Rasters.dims(raster); missingval = Rasters.missingval(raster), crs = Rasters.crs(raster), metadata = Rasters.metadata(raster))
+    return Rasters.Raster(new, Rasters.dims(raster); missingval = Rasters.missingval(raster), crs = Rasters.crs(raster), metadata = Rasters.metadata(raster))
 end
 
 @inline function correction_a!(view, value)
@@ -154,13 +154,14 @@ end
 
 function pycno_interpolate(pycno::Pycnophylactic, source_polygons, source_vals, target_polygons)
     raster = Rasters.rasterize(
+        last,
         source_polygons;
         res = pycno.cellsize,
         fill = source_vals,
         boundary = :touches,
         missingval = NaN
     )
-    return pycno_interpolate(raster, source_polygons, source_vals, target_polygons, pycno.relaxation, pycno.stencil, pycno.tolerance, pycno.maxiters)
+    return pycno_interpolate(raster, source_polygons, source_vals, target_polygons, pycno.relaxation, pycno.kernel, pycno.tol, pycno.maxiters)
 end
 
 
@@ -179,7 +180,7 @@ function interpolate(pycno::Pycnophylactic, TargetTrait::Union{GI.FeatureCollect
 
     # Now, we can take care of the tedious tasks first:
     # 1. Find cell-based areas per polygon
-    polygon_index_raster = rasterize(
+    polygon_index_raster = Rasters.rasterize(
 		last,
 		source_geometries; 
 		res = pycno.cellsize, 
