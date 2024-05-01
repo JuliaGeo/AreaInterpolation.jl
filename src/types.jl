@@ -110,12 +110,18 @@ struct Pycnophylactic <: AbstractInterpolationMethod
     kernel::Stencils.Stencil
     "The relaxation factor.  Defaults to `0.2`."
     relaxation::Float64
-    "The maximum number of iterations.  Defaults to `1000`."
+    "The maximum number of iterations.  Defaults to `300`."
     maxiters::Int
     "The error tolerance at which convergence is achieved.  Defaults to `10e-3`."
     tol::Float64
 end
-Pycnophylactic(cellsize; kernel = Stencils.Kernel(Stencils.Moore(1, 2), fill(0.5, length(Stencils.Moore(1, 2)))), relaxation = 0.2, maxiters = 1000, tol = 10e-3) = Pycnophylactic(cellsize, kernel, relaxation, maxiters, tol)
+Pycnophylactic(
+    cellsize; 
+    kernel = Stencils.Kernel(Stencils.Moore(1, 2), fill(0.5, length(Stencils.Moore(1, 2)))), 
+    relaxation = 0.2, 
+    maxiters = 300, 
+    tol = 10e-3
+) = Pycnophylactic(cellsize, kernel, relaxation, maxiters, tol)
 const Pycno = Pycnophylactic # who exactly is going to type this thing?
 # Pycno should abstract the "weighting" part of the algorithm to a function, so people can inspect the interpolated raster.
 

@@ -131,13 +131,15 @@ record(f, "oono_puri_iterations.mp4", 1:300) do i # This will be replaced by a f
 	for (view, value) in zip(polygon_views, vals)
 		correction_m!(view, value)
 	end
+	# Find the maximum change in the data.
+	Δ_max = NaNMath.maximum(abs.(old .- new))
+	max_change = only(Makie.Formatters.scientific([round(Δ_max; sigdigits = 4)]))
 	# Overwrite the old data with the new data.
 	old .= new
 	sa = StencilArray(old, oono_puri_kernel)
 	# Update the plot!
 	p[3] = sa.parent
 	a.title = "Iteration $i"
-	max_change = only(Makie.Formatters.scientific([NaNMath.maximum(abs.(old .- new))]))
 	a.subtitle = "Δ = $max_change"
 	update!(pm, i; desc = "Max change $(max_change)")
 end	
