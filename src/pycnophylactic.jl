@@ -195,10 +195,23 @@ function interpolate(pycno::Pycnophylactic, TargetTrait::Union{GI.FeatureCollect
     end
     pop!(area_vec) # Remove the value for cells that are not in any polygon
     
-    interpolated_feature_values = map(source_values) do val
+    interpolated_feature_values = NamedTuple{features}(map(features, source_values) do colname, val
+        # Extensive variables are densities, intensive variables are counts.
+        # This means we have to process them separately, and we need to do post-hoc
+        # handling separately as well.
+        # (total_val, area_corrected_val) =  if colname in extensive
+            # total_val = val .* area_vec
+            # area_corrected_val = val
+            # (total_val, area_corrected_val)
+        # else # column is intensive, assumed by default.
+            # area_corrected_val = val ./ area_vec
+            # total_val = val
+            # (total_val, area_corrected_val)
+        # end
+        total_val = val
         area_corrected_val = val ./ area_vec # this is the same for extensive or intensive I think.
-        pycno_interpolate(pycno, source_geometries, area_corrected_val, target_geometries)
-    end
+        pycno_interpolate(pycno, source_geometries, total_val, area_corrected_val, target_geometries)
+    end)
     # The result of `map` above is a canonical row table form, being a Vector of NamedTuples.
     # We can convert it directly into a column table, i.e., a NamedTuple of Vectors, using Tables.
     new_feature_columns = Tables.columntable(interpolated_feature_values)
