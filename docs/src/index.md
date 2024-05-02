@@ -4,11 +4,12 @@ CurrentModule = AreaInterpolation
 
 # AreaInterpolation
 
-Documentation for [AreaInterpolation](https://github.com/JuliaGeo/AreaInterpolation.jl).
+AreaInterpolation.jl is a package that enables interpolation between collections of areas (usually polygons or multipolygons) associated with some data. 
 
-```@index
-```
+Several different methods are offered here:
+- `Direct()`
+- `Pycnophylactic(cellsize::Float64)`
+- `Dasymetric(raster_mask::Raster)`
 
-```@autodocs
-Modules = [AreaInterpolation]
-```
+and others, see the [Methods](@ref) section for more details.
+

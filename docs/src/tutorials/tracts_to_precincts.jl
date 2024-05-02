@@ -16,7 +16,7 @@ tracts = Shapefile.Table(tracts_zipfile)
 poly(tracts.geometry; color = :transparent, strokewidth = 1)
 
 # Then, we download the precinct data:
-precincts_zipfile = download("https://ndownloader.figshare.com/files/20460549")
+precincts_zipfile = download("https://ndownloader.figshare.com/files/20460549", "precincts.zip")
 precincts = Shapefile.Table(precincts_zipfile)
 poly(precincts.geometry; color = :transparent, strokewidth = 1)
 # Hold on -- something looks wrong here!  It turns out that the precincts are not in the same projection as the tracts.  We can fix this by transforming the precincts to the tracts' projection.
