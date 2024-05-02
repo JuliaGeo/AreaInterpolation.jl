@@ -4,7 +4,7 @@
 This file contains the implementation for the `Direct()` method.
 
 =#
-function interpolate(::Direct, polygon, sources::AbstractVector, values::NamedTuple, source_areas, source_rtree; kwargs...) # should be 2 params `intensive` and `extensive` as well...
+function interpolate(::Direct, polygon, sources::AbstractVector, values::NamedTuple, source_areas, source_rtree; explicit, implicit, kwargs...) # should be 2 params `intensive` and `extensive` as well...
     # First, query the spatial index for `source` for the polygons that may intersect our polygon.
     # WARNING: whichever spatial index you use must be thread-safe if using this in a multithreaded context!
     likely_polygon_indices = SortTileRecursiveTree.query(source_rtree, polygon) # TODO: create a spatial index interface in GeoInterface

@@ -24,3 +24,31 @@ function decompose_to_geoms_and_values(sources; features = nothing) # sources mu
     values = namedtuple[value_columns]
     return (geometries, NamedTuple(zip(value_columns, values)))
 end
+
+
+"""
+    rasterized_polygon_areas(source_geometries, cellsize::Real)::Vector{Float64}
+
+Compute the rasterized area of each polygon in `source_geometries`, on a 
+Raster with resolution `cellsize`.  `sour`
+
+Returns a vector of cell counts per source geometry.
+"""
+function rasterized_polygon_areas(source_geometries, cellsize)
+    polygon_index_raster = Rasters.rasterize(
+		last,
+		source_geometries; 
+		res = cellsize, 
+		fill = 1:size(source_geometries, 1),
+		boundary = :center, 
+		missingval = size(source_geometries, 1)+1,
+    )
+    # Now, we can also process areas:
+    area_vec = zeros(Int, size(source_geometries, 1)+1)
+    for cell in polygon_index_raster
+            area_vec[cell] += 1
+    end
+    pop!(area_vec) # Remove the value for cells that are not in any polygon
+    return area_vec
+end
+

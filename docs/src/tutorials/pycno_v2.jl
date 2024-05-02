@@ -24,9 +24,14 @@ _reprocess_r_polygons!(wardsClipped)
 
 
 using AreaInterpolation
-itp = Pycnophylactic(20.0; kernel = five_point_kernel)
-interpolate(itp, wards, race; features = (:TOTAL_E,))
-
+itp = Pycnophylactic(20.0; kernel = oono_puri_kernel, tol = .7 * 10^-3, maxiters = 1000)
+wards_race = interpolate(itp, wards, race; features = (:TOTAL_E,))
+f, a1, p1 = poly(wards_race.geometry; color = wards_race.TOTAL_E .|> identity, axis = (; aspect = DataAspect()))
+Colorbar(f[1, 2], p1)
+a2, p2 = heatmap(f[1, 3], AreaInterpolation.pycno_raster(itp, race.geometry, race.TOTAL_E .|> identity; extensive = true); axis = (; aspect = DataAspect()))
+Colorbar(f[1, 4], p2)
+linkaxes!(a1, a2)
+f
 # Now, we use Rasters.jl to perform pycnophylactic interpolation.
 # NaNMath.jl provides NaN-ignoring reducer functions, which are useful here.
 using Rasters, NaNMath, Stencils
