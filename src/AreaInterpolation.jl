@@ -19,9 +19,11 @@ import NaNMath
 
 include("types.jl")
 include("utils.jl")
-include("direct.jl")
-include("pycnophylactic.jl")
-include("dasymetric.jl")
+include("interpolate.jl")
+include("methods/direct.jl")
+include("methods/pycnophylactic.jl")
+include("methods/weighted_pycnophylactic.jl")
+include("methods/dasymetric.jl")
 
 export interpolate
 export Direct, Pycno, Pycnophylactic, Dasymetric

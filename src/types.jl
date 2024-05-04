@@ -1,5 +1,8 @@
-# # Types
+#=
+# Types
 
+This file defines abstract types and some interface methods, as well as custom error types used in AreaInterpolation.
+=#
 """
     abstract type AbstractInterpolationMethod
 

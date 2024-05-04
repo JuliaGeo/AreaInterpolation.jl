@@ -1,10 +1,20 @@
+#=
+# Benchmarks
+
+This file contains Julia benchmarks for areal interpolation.  
+
+## St. Louis wards
+=#
+
+
 # Get data from the areal package
 
-using RData, CodecBzip2
+using RData, CodecBzip2, DataFrames
 
 function _reprocess_r_polygons!(df::DataFrame)
     geoms = map(df.geometry) do geom_array
-        GI.Polygon(GI.LinearRing.(geom_array .|> x -> GI.Point.(view.((x,), 1:size(x, 1), :))))
+        permutedims.(geom_array)
+        GI.Polygon(GI.LinearRing.(permutedims.(geom_array) .|> vec .|> x -> reinterpret(GI.Point{false, false, Float64, Nothing}, x)))
     end
     df.geometry = geoms
     df
@@ -74,3 +84,11 @@ with_theme(MakieThemes.bbc()) do
     )
     f
 end
+
+
+#=
+
+## Texas precincts
+
+=#
+
