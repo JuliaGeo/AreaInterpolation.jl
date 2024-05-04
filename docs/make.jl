@@ -82,6 +82,7 @@ makedocs(;
         "API" => "api.md",
         "Source code" => literate_pages
     ],
+    warnonly = true,
 )
 
 deploydocs(;

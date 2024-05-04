@@ -14,5 +14,10 @@ during input.
 
 ## Dasymetric method
 
+### Raster masks
+Raster masks are supported.
+### Vector masks
+Vector masks (like building footprints) are not yet supported.  It's trivial to do this by two interpolations, though -- first interpolate the source values to the intermediate geometries, then interpolate the intermediate geometries to the target geometries.
 
 ## Weighted-pycnophylactic method
+
