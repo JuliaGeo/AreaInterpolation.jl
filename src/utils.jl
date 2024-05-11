@@ -52,3 +52,4 @@ function rasterized_polygon_areas(source_geometries, cellsize)
     return area_vec
 end
 
+# We need the ability to set up a targeting

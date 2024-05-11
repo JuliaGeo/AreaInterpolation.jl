@@ -21,6 +21,7 @@ abstract type AbstractInterpolationMethod end
 # The `interpolate` method is defined in `interpolate.jl`, since it includes
 # a lot of logic for data handling as well as CRS checks, etc.
 
+
 """
     Direct()
 
