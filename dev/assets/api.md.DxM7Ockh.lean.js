@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as t,a6 as i}from"./chunks/framework.Dlat40qL.js";const k=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"api.md","filePath":"api.md","lastUpdated":null}'),o={name:"api.md"},s=i("",22),r=[s];function n(l,p,d,c,h,u){return t(),a("div",null,r)}const g=e(o,[["render",n]]);export{k as __pageData,g as default};
