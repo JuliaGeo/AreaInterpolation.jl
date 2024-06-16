@@ -8,6 +8,10 @@ AreaInterpolation.jl is a package to perform "areal interpolation", that is, int
 
 Similar implementations in other languages can be found in [^areal] (R), [^sf] (R), and [^tobler] (Python).
 
+## Quick start
+
+The main entry point is the `AreaInterpolation.interpolate([alg], source, dest; extensive = (:col_a, :col_b), intensive = (:col1, :col2))`.
+
 ## Performance
 AreaInterpolation.jl offers seamless multithreading support, and integrates with the rest of the Julia ecosystem as well!
 ![download-13](https://github.com/JuliaGeo/AreaInterpolation.jl/assets/32143268/bbc8b36e-f7a3-491d-afd2-045101d334d3)
