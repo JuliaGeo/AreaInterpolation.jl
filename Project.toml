@@ -14,7 +14,6 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 NaNMath = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
 OhMyThreads = "67456a42-1dca-4109-a031-0a68de7e3ad5"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
-# Proj = "c94c279d-25a6-4763-9509-64d165bea63e"
 Rasters = "a3a2b9e3-a471-40c9-b274-f788e487c689"
 SIMD = "fdea26ae-647d-5447-a871-4b548cad5224"
 SortTileRecursiveTree = "746ee33f-1797-42c2-866d-db2fce69d14d"
@@ -29,7 +28,7 @@ GeoInterface = "1"
 GeometryOps = "0.1"
 LibGEOS = "0.8, 0.9"
 NaNMath = "1"
-OhMyThreads = "0.5"
+OhMyThreads = "0.5, 0.6"
 ProgressMeter = "1"
 Rasters = "0.9, 0.10, 0.11"
 SIMD = "3"
@@ -42,4 +41,4 @@ julia = "1.9"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", ]
+test = ["Test"]
