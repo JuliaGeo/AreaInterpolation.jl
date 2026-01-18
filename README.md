@@ -11,11 +11,15 @@ Similar implementations in other languages can be found in [^areal] (R), [^sf] (
 ## Quick start
 
 The main entry point is the `AreaInterpolation.interpolate([alg], source, dest; extensive = (:col_a, :col_b), intensive = (:col1, :col2))`.
+Here `source` should be a DataFrame with the columns in `extensive` and `intensive`, which define how to treat the variables - whether as counts or means.
+
 
 ## Performance
 AreaInterpolation.jl offers seamless multithreading support, and integrates with the rest of the Julia ecosystem as well!
 ![download-13](https://github.com/JuliaGeo/AreaInterpolation.jl/assets/32143268/bbc8b36e-f7a3-491d-afd2-045101d334d3)
 
+## Related packages
+- [ConservativeRegridding.jl](https://github.com/JuliaGeo/ConservativeRegridding.jl) also implements the "direct" area-weighted interpolation algorithm, but not others like the pycnophylactic or dasymetric interpolations.
 
 References:
 
